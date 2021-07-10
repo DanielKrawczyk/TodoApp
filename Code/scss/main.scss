@@ -1,0 +1,352 @@
+@mixin flex($flow, $justify, $align) {
+    display: flex;
+    flex-flow: $flow;
+    justify-content: $justify;
+    align-items: $align;
+}
+
+@mixin marginAuto {
+    margin-right: auto;
+    margin-left: auto;
+}
+
+@mixin transition($s) {
+    transition: all $s ease-in-out;
+}
+
+@keyframes rotate {
+    0%{transform: rotate(0);}
+    100%{transform: rotate(360deg);}
+}
+
+$font: 'Amatic SC', cursive;
+$font-sec: 'Lato', sans-serif;
+$green: rgb(140, 200, 100);
+$red: rgb(180, 100, 100);
+$gray: rgb(180, 180, 180);
+
+body {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: $font-sec;
+}
+
+.main {
+    text-align: center;
+
+    &-title {
+        padding: 1rem;
+        font-size: 2rem;
+        font-family: $font;
+    }
+
+    &-options {
+        @include flex(row nowrap, space-evenly, center);
+
+        &_item {
+            width: 20vw;
+            height: auto;
+            border: 1px solid black;
+            box-shadow: 1px 1px 4px black, -1px -1px 4px black;
+            @include transition(0.3s);
+
+            &:hover {
+                cursor: pointer;
+                transform: translateY(-1%);
+                box-shadow: 1px 4px 6px black, -1px -1px 0px;
+            }
+        }
+    }
+
+    &-list {
+        @include flex(column wrap, center, center);
+
+        &_item {
+            width: 75vw;
+            height: auto;
+            margin-top: 2rem;
+            margin-bottom: 3rem;
+            @include flex(row nowrap, space-between, flex-start);
+            @include marginAuto;
+            
+            & .marked, & .options {
+                max-width: 20%;
+                @include flex(row nowrap, space-around, center);
+
+                & h2 {
+                    margin: 1rem;
+                    font-family: $font;
+                }
+            }
+
+            & .text {
+                max-width: 60%;
+                width: 100%;
+                text-align: center;
+                
+                & p {
+                    width: 100%;
+                    padding: 0.5rem;
+                    border-bottom: 2px solid lightgray;
+                }
+
+                &-info {
+                    font-size: 0.5rem;
+                    @include flex(row nowrap, space-between, center);
+                }
+            }
+
+            & .editing {
+
+                &-txt textarea {
+                    width: 50%;
+                }
+            }
+        }
+    }
+}
+
+.edit {
+    color: gray;
+
+    &:hover {
+        cursor: pointer;
+        color: black;
+    }
+}
+.add {
+    margin-top: 2vh;
+    text-align: center;
+
+    &-title {
+        padding: 1rem;
+        font-size: 2rem;
+        font-family: $font;
+    }
+
+    &-form {
+        width: 60vw;
+        height: auto;
+        margin-bottom: 3rem;
+        @include marginAuto;
+
+        & textarea {
+            width: 100%;
+            height: 50vh;
+            padding: 1rem;
+            font-size: 1.5rem;
+            resize: none;
+        }
+    }
+}
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: auto;
+    margin-top: 5rem;
+    font-size: 0.4rem;
+}
+.point {
+    cursor: pointer;
+}
+
+.red {
+    color: red;
+}
+.green {
+    color: green;
+}
+.done {
+    color: black;
+
+    &:hover {
+        cursor: pointer;
+        color: green;
+    }
+}
+.undone {
+    color: black;
+
+    &:hover {
+        cursor: pointer;
+        color: red;
+    }
+}
+.trash {
+    color: black;
+
+    &:hover {
+        cursor: pointer;
+        color: red;
+    }
+}
+.invis {
+    visibility: hidden;
+
+    &-hide {
+        height: 0;
+        overflow: hidden;
+    }
+}
+.fade {
+    opacity: 0;
+    @include transition(0.3s);
+
+    &.show {
+        opacity: 1;
+    }
+}
+.btn {
+    padding: 0.5rem;
+    font-weight: bold;
+    color: white;
+    border-radius: 10px;
+
+    &.r {
+        background-color: $gray;
+        &:hover {
+            cursor: pointer;
+            background-color: $red;
+        }
+    }
+    &.g {
+        background-color: $gray;
+        &:hover {
+            cursor: pointer;
+            background-color: $green;
+        }
+    }
+}
+.count {
+    color: black;
+    font-family: $font;
+    font-size: 1.5rem;
+
+    &.h:hover {
+        cursor: pointer;
+        color: gray;
+    }
+}
+.m-r {
+    margin-right: 1.5rem;
+}
+.result {
+    margin-top: 2rem;
+}
+
+#bookmark {
+    position: absolute;
+    top: -130px;
+    left: 100px;
+
+}
+
+#add {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    border: none;
+    width: 20px;
+    height: 20px;
+    padding: 1rem;
+    background-color: darkgreen;
+    border-radius: 50px;
+
+    & i {
+        color: white;
+    }
+    &:hover {
+        cursor: pointer;
+        background-color: green;
+    }
+}
+
+#search {
+    margin-top: 2rem;
+    & input {
+        width: 50vw;
+        border-radius: 20px;
+        padding: 0.5rem;
+    }
+}
+
+#pencil {
+    margin-left: 0.7rem;
+    animation: rotate 1.5s linear infinite;
+}
+
+#loading, #finished, #info {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 5;
+    width: 100vw;
+    height: 100vh;
+    text-align: center;
+    background-color: rgb(255, 255, 255);
+    opacity: 0.9;
+    
+    & h2 {
+        margin-top: 50vh;
+        color: black;
+        font-family: $font;
+    }
+
+    & span {
+        margin-top: 50vh;
+        font-family: $font;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .main-list_item {
+        width: 100vw;
+        margin-bottom: 2rem;
+        @include flex(column wrap, center, center);
+
+        & .marked, & .options {
+            max-width: 60%
+        }
+
+        & .text {
+            max-width: 90vw;
+        }
+    }
+
+    .add .add-form {
+        width: 70vw;
+    }
+    
+    .main-counter {
+        @include flex(column wrap, center, center);
+    }
+    .m-r {
+        margin-right: 0;
+    }
+    .m-t {
+        margin-top: 1rem;
+    }
+    .main {
+        margin-bottom: 50vh;
+    }
+}
+@media screen and (max-width: 400px) {
+    .main-list_item {
+        width: 95vw;
+        
+        & .marked, & .options {
+            max-width: 80%
+        }
+    }
+
+    .add .add-form {
+        width: 90vw;
+
+        & textarea {
+            width: 70vw;
+            height: 40vh;
+        }
+    }
+}
