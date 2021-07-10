@@ -1,7 +1,7 @@
 import { atom } from 'recoil';
 // Search engine
 const searchState = atom({
-    key: 'search temp data',
+    key: 'search data',
     default: {
         keyword: '',
         data: []

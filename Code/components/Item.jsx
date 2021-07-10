@@ -109,12 +109,12 @@ function Item(props) {
         switch (type) { // Checking the type of the posting data
             case 'DONE':
                 patch = {
-                    completed: true
+                    status: "completed"
                 };
                 break;
             case 'UNDONE':
                 patch = {
-                    completed: false
+                    status: "pending"
                 };
                 break;
             case 'EDITED':
@@ -128,7 +128,7 @@ function Item(props) {
         };
         loading.classList.remove('invis'); // Turn on loading screen
 
-        const data = await fetchPOST(`https://gorest.co.in/public-api/todos/${item.id}`, "PATCH", patch); // POST data to server
+        const data = await fetchPOST(`todos/${item.id}`, "PATCH", patch); // POST data to server
 
         resetData(); // Set recoil value in data.js to default
         loading.classList.add('invis'); // Turn off loading screen
@@ -146,7 +146,7 @@ function Item(props) {
         if (check) { // If confirm window returns true
             loading.classList.remove('invis'); // Turn on loading screen
 
-            const data = await fetchDELETE(`https://gorest.co.in/public-api/todos/${x.id}`); // DELETE data from server
+            const data = await fetchDELETE(`todos/${x.id}`); // DELETE data from server
 
             resetData(); // Set recoil value in data.js to default
             loading.classList.add('invis'); // Turn off loading screen

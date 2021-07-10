@@ -33,11 +33,13 @@ function Add() {
         const post = {
             user_id: user,
             title: document.getElementById('title').value,
-            completed: false
+            status: "pending",
+            due_on: '2022-06-06T00:00:00.000Z'
         }
 
         try {
-            const data = await fetching.fetchPOST(`https://gorest.co.in/public-api/users/${user}/todos`, "POST", post); // POST data to server
+            const data = await fetching.fetchPOST(`users/${user}/todos`, "POST", post); // POST data to server
+            if (data.status === 422) return setMsg('Something go wrong! Please try again later!');
             setMsg('New task added succesfully!'); // Prepare message for successful POST
             resetData(); // Reset recoil value from data.js to default
             return data; // Return response for no reason

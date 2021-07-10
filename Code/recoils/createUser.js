@@ -14,7 +14,7 @@ export default async function createUser() { // Check if user exists in localSto
         status: "Active"
     } 
 
-    const newUser = await fetching.fetchPOST('https://gorest.co.in/public-api/users/', "POST", post); // Call a function that creates new user
+    const newUser = await fetching.fetchPOST('users/', "POST", post); // Call a function that creates new user
     localStorage.setItem("id", JSON.stringify(newUser.data.id)); // Save user to localStorage to prevent creating new one after reload
     return newUser.data.id; // Return new id for the recoil value
 }

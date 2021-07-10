@@ -6,9 +6,11 @@ import Item from './Item'
 import dataState from '../recoils/data';
 import userID from '../recoils/user';
 import fetching from './fetch';
+import searchState from '../recoils/search';
 
 function List() {
     const [ data, setData ] = useRecoilState(dataState), // Set and use recoil value from data.js
+    [ search, setSearch ] = useRecoilState(searchState), // Set and use recoil value from search.js
     user = useRecoilValue(userID), // Use recoil value from user.js
 
     { fetchGET, accessToken } = fetching; // Destructuring fetching object
@@ -16,19 +18,20 @@ function List() {
 
     function downloadData() { // Download data from server
 
-        fetchGET(`https://gorest.co.in/public-api/users/${user}/todos?access-token=${accessToken}`) // GET data from server
+        fetchGET(`users/${user}/todos?access-token=${accessToken}`) // GET data from server
         .then(res => { // Response
-            if (res.code === (200 || 201) && res.data.length === 0) { // If data is fetched succesfully, but there is no tasks
-
-                updateDataState('NO_TASKS');
-                
-            } else if (res.code >= 400) { // When something go wrong
+            if (res >= 400) { // If data is fetched succesfully, but there is no tasks
 
                 updateDataState('CONNECTION_ERR');
+                
+            } else if (res.data.length === 0) { // When something go wrong, there was a status 404 before, but the server got shitty update and broke the whole communication
 
-            } else if (res.code === (200 || 201) && res.data.length > 0) { // If data is fetched succesfully and ready to use
+                updateDataState('NO_TASKS');
 
-                updateDataState('READY', res.data, res.data.filter(f => f.completed === false), res.data.filter(f => f.completed === true));
+            } else if (res.data.length > 0) { // If data is fetched succesfully and ready to use
+
+                updateDataState('READY', res.data, res.data.filter(f => f.status === "pending"), res.data.filter(f => f.status === "completed"));
+                setSearch({keyword: search.keyword, data: res.data.filter(f => f.title.includes(search.keyword))}); // Fix search engine did not update issue
 
             }
         })
@@ -42,8 +45,8 @@ function List() {
 
 
     async function start() { // Start function called after setting recoil value in data.js to default
-        const res = await fetchGET(`https://gorest.co.in/public-api/users/${user}?access-token=${accessToken}`); // GET data from server
-        if (res.code === 404) {
+        const res = await fetchGET(`users/${user}?access-token=${accessToken}`); // GET data from server
+        if (res >= 400) {
             if ("id" in localStorage) {
                 localStorage.removeItem("id"); // To fix endless loop of checking non existing user (  )
             }
